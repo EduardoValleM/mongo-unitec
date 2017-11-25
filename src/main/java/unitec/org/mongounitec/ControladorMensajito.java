@@ -30,12 +30,14 @@ public class ControladorMensajito{
     
     
     //Metodo GET: buscar todos
+    @CrossOrigin
    @RequestMapping(value="/mensajito", method=RequestMethod.GET,
            headers = {"Accept=application/json"}) 
    public ArrayList<Mensajito> obtenerTodos()throws Exception{
            return (ArrayList<Mensajito>) repoMensa.findAll();
    }
     //Metodo GET: Buscar Por ID
+   @CrossOrigin
     @RequestMapping(value="/mensajito/{id}", method=RequestMethod.GET,
            headers = {"Accept=application/json"}) 
    public Mensajito obtenerPorId(@PathVariable String id)throws Exception{
@@ -43,6 +45,7 @@ public class ControladorMensajito{
    }
    
    //Metodo POST : Guardar, Version para clientes variables, web y desktop
+   @CrossOrigin
    @RequestMapping(value="/mensajito/{titulo}/{cuerpo}", method=RequestMethod.POST,
            headers = {"Accept=application/json"}) 
    public Estatus GuardarMensajito(@PathVariable String titulo, @PathVariable String cuerpo)throws Exception{
@@ -52,6 +55,7 @@ public class ControladorMensajito{
            return estatus;
    }
    //MEtodos POST; guardar Pero es una version mas pura y efectiva
+   @CrossOrigin
     @RequestMapping(value="/mensajito", method=RequestMethod.POST,
             headers = {"Accept=application/json"}) 
    public Estatus guardarMensajitoMejorado(@RequestBody String json)
@@ -65,4 +69,34 @@ public class ControladorMensajito{
        return es;
    }
    
+   //MEtodos PUT; Actualizar Mensajito
+   @CrossOrigin
+    @RequestMapping(value="/mensajito", method=RequestMethod.PUT,
+            headers = {"Accept=application/json"}) 
+   public Estatus actualizarMensajito(@RequestBody String json)
+           throws Exception{
+       //Transformamos el json a objeto Java
+       ObjectMapper maper=new ObjectMapper();
+       Mensajito mensa=maper.readValue(json,Mensajito.class);
+       repoMensa.save(mensa);
+       Estatus es=new Estatus();
+       es.setSuccess(true);
+       return es;
+   }
+
+   //Metodo DELETE: actualizar
+    
+    @CrossOrigin
+    @RequestMapping(value="/mensajito/{id}", method=RequestMethod.DELETE,
+            headers = {"Accept=application/json"}) 
+   public Estatus borrarMensajito(@PathVariable String id)
+           throws Exception{
+      
+       repoMensa.delete(id);
+       Estatus es=new Estatus();
+       es.setSuccess(true);
+       return es;
+   }
+   
  }
+
